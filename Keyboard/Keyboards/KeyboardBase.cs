@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Keyboard.Enums;
 
 namespace Keyboard.Keyboards
 {
@@ -73,7 +74,17 @@ namespace Keyboard.Keyboards
                 staggerComponent = decimal.Multiply(KeyCapSeparation, 0.75M);
             }
 
-            return from.Row < to.Row != from.Column <= to.Column ? -staggerComponent : staggerComponent;
+            var direction = GetKeyJumpDirection(from, to);
+
+            return direction.HasFlag(Direction.DownAndRight) || direction.HasFlag(Direction.UpAndLeft) ? staggerComponent : -staggerComponent;
+        }
+
+        private Direction GetKeyJumpDirection(IndexCoordinate from, IndexCoordinate to)
+        {
+            Direction direction = Direction.None;
+            direction |= from.Row < to.Row ? Direction.Down : Direction.Up;
+            direction |= from.Column <= to.Column ? Direction.Right : Direction.Left;
+            return direction;
         }
     }
 }
