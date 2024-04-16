@@ -1,4 +1,6 @@
-﻿namespace Keyboard
+﻿using System.Numerics;
+
+namespace Keyboard
 {
     public class IndexCoordinate
     {

@@ -1,11 +1,10 @@
-﻿namespace Keyboard.Keyboards
+﻿namespace Keyboard.Keyboards;
+
+public interface IKeyboard
 {
-    public interface IKeyboard
-    {
-        char[][] Layout { get; }
+    char[][] Layout { get; }
 
-        IndexCoordinate GetKeyIndex(char character);
+    IndexCoordinate GetKeyIndex(char character);
 
-        double GetKeySeparationDistance(char from, char to);
-    }
+    double GetKeySeparationDistance(char from, char to);
 }
