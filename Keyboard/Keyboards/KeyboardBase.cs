@@ -7,10 +7,10 @@ namespace Keyboard.Keyboards;
 public abstract class KeyboardBase : IKeyboard
 {
     private const decimal KeyCapSeparation = 19.05M;
-        
+
     public abstract char[][] Layout { get; }
 
-    public IndexCoordinate GetKeyIndex(char character)
+    public IndexCoordinate GetKeyIndexCoordinate(char character)
     {
         for (var row = 0; row < Layout.Length; row++)
         {
@@ -24,6 +24,31 @@ public abstract class KeyboardBase : IKeyboard
         throw new ArgumentException($"Character '{character}' not found.");
     }
 
+    public Coordinate GetKeyCoordinate(char character)
+    {
+        var coordinatesTo = GetKeyIndexCoordinate(character);
+
+        var verticalSeparationIndex = Math.Abs(0 - coordinatesTo.Row);
+        var horizontalSeparationIndex = Math.Abs(0 - coordinatesTo.Column);
+
+        var horizontalComponent = horizontalSeparationIndex * KeyCapSeparation;
+            
+        if (verticalSeparationIndex == 0)
+        {
+            return new Coordinate((double)horizontalComponent + ((double)KeyCapSeparation / 2), 0);
+        }
+            
+        var verticalComponent = verticalSeparationIndex * KeyCapSeparation;
+        var staggerComponent = GetHorizontalStaggerDistance(new IndexCoordinate(0, 0), coordinatesTo);
+            
+        var horizontalSum = decimal.Add(horizontalComponent, staggerComponent);
+        var verticalSquared = decimal.Multiply(verticalComponent, verticalComponent);
+        var horizontalComponentSquared = decimal.Multiply(horizontalSum, horizontalSum);
+        var allComponentsSummed = decimal.Add(verticalSquared, horizontalComponentSquared);
+
+        throw new NotImplementedException();
+    }
+
     public double GetKeySeparationDistance(char from, char to)
     {
         if (from == to)
@@ -31,8 +56,8 @@ public abstract class KeyboardBase : IKeyboard
             return 0;
         }
             
-        var coordinatesFrom = GetKeyIndex(from);
-        var coordinatesTo = GetKeyIndex(to);
+        var coordinatesFrom = GetKeyIndexCoordinate(from);
+        var coordinatesTo = GetKeyIndexCoordinate(to);
 
         var verticalSeparationIndex = Math.Abs(coordinatesFrom.Row - coordinatesTo.Row);
         var horizontalSeparationIndex = Math.Abs(coordinatesFrom.Column - coordinatesTo.Column);

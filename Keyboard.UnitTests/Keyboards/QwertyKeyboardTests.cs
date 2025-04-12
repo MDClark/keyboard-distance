@@ -42,7 +42,7 @@ namespace Keyboard.UnitTests.Keyboards
         [TestCase('m', 2, 6)]
         public void Qwerty_GetKeyIndexCoordinate(char character, int expectedRow, int expectedColumn)
         {
-            var indexCoordinates = _keyboard.GetKeyIndex(character);
+            var indexCoordinates = _keyboard.GetKeyIndexCoordinate(character);
             Assert.AreEqual(expectedRow, indexCoordinates.Row);
             Assert.AreEqual(expectedColumn, indexCoordinates.Column);
         }
@@ -54,7 +54,16 @@ namespace Keyboard.UnitTests.Keyboards
         [TestCase('`')]
         public void Qwerty_GetIndexCoordinate_Invalid(char character)
         {
-            Assert.Throws<ArgumentException>(() => _keyboard.GetKeyIndex(character));
+            Assert.Throws<ArgumentException>(() => _keyboard.GetKeyIndexCoordinate(character));
+        }
+
+        [TestCase('q', 9.525, 9.525)]
+        [TestCase('w', 28.575, 9.525)]
+        public void Qwerty_GetCoordinate(char character, double expectedX, double expectedY)
+        {
+            var coordinate = _keyboard.GetKeyCoordinate(character);
+            Assert.That(coordinate.X, Is.EqualTo(expectedX));
+            Assert.That(coordinate.Y, Is.EqualTo(expectedY));
         }
 
         [TestCase('q', 'w', 19.05)]
@@ -759,6 +768,6 @@ namespace Keyboard.UnitTests.Keyboards
         public void Qwerty_GetKeySeparationDistance(char characterA, char characterB, double expectedDistance)
         {
             Assert.AreEqual(expectedDistance, _keyboard.GetKeySeparationDistance(characterA, characterB), 0.1);
-        }
+        }        
     }
 }
